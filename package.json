@@ -6,9 +6,20 @@
   "author": "Keni Barwick <keni@barwick.net> (http://keni.dj/)",
   "license": "ISC",
   "alexa": {
-    "applicationId":""
+    "applicationId": ""
   },
   "dependencies": {
     "alexa-app": "^2.1.0"
-  }
+  },
+  "scripts": {
+    "test": "call my"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kenibarwick/alexa_call_my.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kenibarwick/alexa_call_my/issues"
+  },
+  "homepage": "https://github.com/kenibarwick/alexa_call_my#readme"
 }
