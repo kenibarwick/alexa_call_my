@@ -1,0 +1,14 @@
+{
+  "name": "call_my",
+  "version": "1.0.0",
+  "description": "Call my phone skill",
+  "main": "index.js",
+  "author": "Keni Barwick <keni@barwick.net> (http://keni.dj/)",
+  "license": "ISC",
+  "alexa": {
+    "applicationId":""
+  },
+  "dependencies": {
+    "alexa-app": "^2.1.0"
+  }
+}
