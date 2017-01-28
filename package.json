@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "description": "Call my phone skill",
   "main": "index.js",
-  "author": "Keni Barwick <keni@barwick.net> (http://keni.dj/)",
+  "author": "Keni Barwick <keni@themobileguy.net> (http://themobileguy.net/)",
   "license": "ISC",
   "alexa": {
     "applicationId": ""
   },
   "dependencies": {
-    "alexa-app": "^2.1.0"
+    "alexa-app": "^2.1.0",
+	"nexmo": "^1.1.0",
+	"dotenv": "^4.0.0"
   },
   "scripts": {
     "test": "call my"

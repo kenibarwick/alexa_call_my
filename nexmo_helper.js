@@ -1,51 +1,36 @@
 'use strict';
-var _ = require('lodash');
-var rp = require('request-promise');
-var ENDPOINT = 'http://services.faa.gov/airport/status/';
+var Nexmo = require('nexmo');
+require('dotenv').config({path: __dirname + '/.env'});
+module.exports = NexmoHelper;
 
 function NexmoHelper() { }
 
-NexmoHelper.prototype.requestCallStatus = function(deviceType) {
-  return this.getCallStatus(deviceType).then(
-    function(response) {
-      console.log('success - received airport info for ' + deviceType);
-      return response.body;
-    }
-  );
-};
+NexmoHelper.prototype.makeCall = function(deviceType) {
 
-NexmoHelper.prototype.getCallStatus = function(deviceType) {
-  var options = {
-    method: 'GET',
-    uri: ENDPOINT + deviceType,
-    resolveWithFullResponse: true,
-    json: true
-  };
-  return rp(options);
-};
-module.exports = NexmoHelper;
+const privateKey = require('fs').readFileSync(__dirname + '/private.key');
 
-NexmoHelper.prototype.formatCallStatus = function(airportStatus) {
-  var weather = _.template('The current weather conditions are ${weather}, ${temp} and wind ${wind}.')({
-    weather: airportStatus.weather.weather,
-    temp: airportStatus.weather.temp,
-    wind: airportStatus.weather.wind
-  });
-  if (airportStatus.delay === 'true') {
-    var template = _.template('There is currently a delay for ${airport}. ' +
-      'The average delay time is ${delay_time}. ' +
-      'Delay is because of the following: ${delay_reason}. ${weather}');
-    return template({
-      airport: airportStatus.name,
-      delay_time: airportStatus.status.avgDelay,
-      delay_reason: airportStatus.status.reason,
-      weather: weather
-    });
-  } else {
-    //    no delay
-    return _.template('There is currently no delay at ${airport}. ${weather}')({
-      airport: airportStatus.name,
-      weather: weather
-    });
-  }
+const nexmo = new Nexmo({
+  apiKey: process.env.NEXMO_API_KEY,
+  apiSecret: process.env.NEXMO_API_SECRET,
+  applicationId: process.env.APPLICATION_ID,
+  privateKey: privateKey
+});
+
+	console.log(process.argv[2]);
+
+	nexmo.calls.create({
+	  to: [{
+		type: 'phone',
+		number: '447795666588'
+	  }],
+	  from: {
+		type: 'phone',
+		number: '12345678901'
+	  },
+	  answer_url: ['https://nexmo-community.github.io/ncco-examples/first_call_talk.json']
+	}, (err, res) => {
+	  if(err) { console.error(err); }
+	  else { console.log(res); }
+	});
+
 };
