@@ -1,23 +1,39 @@
 'use strict';
 var Nexmo = require('nexmo');
 require('dotenv').config({path: __dirname + '/.env'});
-module.exports = NexmoHelper;
+var fs = require('fs');
+var request = require('request');
+var uuid = require('node-uuid');
+var jwt = require('jsonwebtoken');
+const privateKey = require('fs').readFileSync(__dirname + '/private.key');
 
+module.exports = NexmoHelper;
+// saved
 function NexmoHelper() { }
+
+NexmoHelper.prototype.requestCallStatus = function(deviceType) {
+  return this.makeCall(deviceType).then(
+    function(res) {
+      console.log('success - calling ' + deviceType);
+      return res;
+    }
+  );
+};
 
 NexmoHelper.prototype.makeCall = function(deviceType) {
 
-const privateKey = require('fs').readFileSync(__dirname + '/private.key');
+	const privateKey = require('fs').readFileSync(__dirname + '/private.key');
 
-const nexmo = new Nexmo({
-  apiKey: process.env.NEXMO_API_KEY,
-  apiSecret: process.env.NEXMO_API_SECRET,
-  applicationId: process.env.APPLICATION_ID,
-  privateKey: privateKey
-});
+	const nexmo = new Nexmo({
+	  apiKey: process.env.NEXMO_API_KEY,
+	  apiSecret: process.env.NEXMO_API_SECRET,
+	  applicationId: process.env.APPLICATION_ID,
+	  privateKey: privateKey
+	});
 
-	console.log(process.argv[2]);
-
+	console.log('Attempting to call: ' + deviceType);
+	
+	
 	nexmo.calls.create({
 	  to: [{
 		type: 'phone',
@@ -30,7 +46,8 @@ const nexmo = new Nexmo({
 	  answer_url: ['https://nexmo-community.github.io/ncco-examples/first_call_talk.json']
 	}, (err, res) => {
 	  if(err) { console.error(err); }
-	  else { console.log(res); }
+	  else { 
+	  console.log(res); 
+	  }
 	});
-
 };
