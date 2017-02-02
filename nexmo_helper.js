@@ -43,7 +43,7 @@ NexmoHelper.prototype.makeCall = function(deviceType) {
 		type: 'phone',
 		number: '12345678901'
 	  },
-	  answer_url: ['https://nexmo-community.github.io/ncco-examples/first_call_talk.json']
+	  answer_url: ['https://raw.githubusercontent.com/kenibarwick/alexa_call_my/master/response.json']
 	}, (err, res) => {
 	  if(err) { console.error(err); }
 	  else { 
