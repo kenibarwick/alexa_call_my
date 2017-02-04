@@ -11,7 +11,20 @@ app.launch(function(req,res) {
 	var callStatus = 'Calling your default device';
 	var nexmoHelper = new NexmoHelper();
 	var deviceType = 'default';
-	res.say('Calling your phone').send();
+	var balance = '1.97';
+	
+	res.card({
+			  type: 'Standard',
+			  title: 'Call my', // this is not required for type Simple or Standard
+			  text: 'Your phone was called. Also to let you know, you have a current balance of: ' + balance
+			  // image: { // image is optional
+						// smallImageUrl: 'http://emojipedia-us.s3.amazonaws.com/cache/a0/fd/a0fdd5f25f789e95237d508d4a5c8280.png', // required
+						// largeImageUrl: 'http://emojipedia-us.s3.amazonaws.com/cache/a0/fd/a0fdd5f25f789e95237d508d4a5c8280.png'
+					// }
+});
+	
+	res.say('Calling your phone. I also thought you should know that your balance is below £2').send();
+	
 	nexmoHelper.requestCallStatus(deviceType).then(function(callStatus) 
 		{
 			console.log(res.callStatus);
@@ -37,7 +50,6 @@ app.intent('DeviceIntent', {
 			var prompt = 'Some thing went wrong whilst trying to call your mobile';
 			res.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
 		  });
-		  return false;
 		res.say('Calling device number '+req.slot('DEVICE'));
 	}
 );
