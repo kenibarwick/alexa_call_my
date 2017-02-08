@@ -1,56 +1,123 @@
 var alexa = require('alexa-app');
 var app = new alexa.app('call_my');
-var NexmoHelper = require('./nexmo_helper');
 
+var Nexmo = require('nexmo');
+require('dotenv').config({path: __dirname + '/.env'});
+var fs = require('fs');
+
+const privateKey = require('fs').readFileSync(__dirname + '/private.key');
+var rp = require('request-promise');
+require('promise');
+var ENDPOINT = 'https://rest.nexmo.com/account/get-balance/7459bbc0/5fab57423962f954';
+var deviceType='default';
 // Allow this module to be reloaded by hotswap when changed
 module.change_code = 1;
-
-app.launch(function(req,res) {
-
+var res = '';
+app.launch(function(request, response) {
+	
 	// for now just call a number
 	var callStatus = 'Calling your default device';
-	var nexmoHelper = new NexmoHelper();
 	var deviceType = 'default';
-	var balance = '1.97';
+	var value = '';
+	var options = {
+		uri: ENDPOINT,
+		transform: function (body, res, resolveWithFullResponse) {
+			return JSON.parse(body);
+		}
+	};
 	
-	res.card({
-			  type: 'Standard',
-			  title: 'Call my', // this is not required for type Simple or Standard
-			  text: 'Your phone was called. Also to let you know, you have a current balance of: ' + balance
-			  // image: { // image is optional
-						// smallImageUrl: 'http://emojipedia-us.s3.amazonaws.com/cache/a0/fd/a0fdd5f25f789e95237d508d4a5c8280.png', // required
-						// largeImageUrl: 'http://emojipedia-us.s3.amazonaws.com/cache/a0/fd/a0fdd5f25f789e95237d508d4a5c8280.png'
-					// }
-});
+	response.say(callStatus);
 	
-	res.say('Calling your phone. I also thought you should know that your balance is below £2').send();
-	
-	nexmoHelper.requestCallStatus(deviceType).then(function(callStatus) 
+	rp(options)
+		.then(function (accountBalanceObj) 
 		{
-			console.log(res.callStatus);
-			res.say(callStatus).send();
-		}).catch(function(err) {
-        console.log(err.statusCode);
-        var prompt = 'Some thing went wrong whilst trying to call your mobile';
-        res.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
-      });
- });
+			return accountBalanceObj.value;
+		})		
+		.then(function (value)
+		{
+			// showCard(response , value);
+			console.log('balance: £' + value);
+		})
+		.then(function ()
+		{
+			console.log('try make call');
+			makeCall();
+		}
+		);
+});	
 
+function makeCall(number) {
+		const nexmo = new Nexmo({
+		apiKey: process.env.NEXMO_API_KEY,
+		apiSecret: process.env.NEXMO_API_SECRET,
+		applicationId: process.env.APPLICATION_ID,
+		privateKey: privateKey
+		});
+		var deviceNumber='';
+		switch(number) {
+			case '1':
+				deviceNumber = '447876616568';
+				break;
+			case '2':
+				deviceNumber = '447553432577';
+				break;
+			case '3':
+				deviceNumber = '447711388882';
+				break;				
+			default:
+				deviceNumber = '447795666588';
+		}
+		console.log('Calling device: #' + number + ' which is ' + deviceNumber);
+		
+		nexmo.calls.create({
+			  to: [{
+				type: 'phone',
+				number: deviceNumber
+			  }],
+			  from: {
+				type: 'phone',
+				number: '12345678901'
+			  },
+			  answer_url: ['https://raw.githubusercontent.com/kenibarwick/alexa_call_my/master/response.json']
+			}, (err, nexmoResult) => {
+			  if(err) { console.error(err); }
+			  else { 
+			  console.log(nexmoResult); 
+			  }
+			});
+
+}
+
+
+function showCard (response, value){		
+			console.log('try make card');
+			response.card({
+			  type: 'Standard',
+			  title: 'Call My Phone', // this is not required for type Simple or Standard
+			  text: 'I have called your ' + deviceType + ' phone.\nYour currect balance is: £' + value
+			});
+			console.log('card shown value: £' + value);
+		};
+
+		
 app.intent('DeviceIntent', {
 		"slots":{"DEVICE":"NUMBER"}
 		,"utterances":["device number {1-100|DEVICE}"]
 	},function(req,res) {
 		// for now just call a number
-		var nexmoHelper = new NexmoHelper();
-		nexmoHelper.makeCall().then(function(callStatus) {
-			console.log(callStatus);
-			res.say('Calling your default device').send();
-		  }).catch(function(err) {
-			console.log(err.statusCode);
-			var prompt = 'Some thing went wrong whilst trying to call your mobile';
-			res.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
-		  });
+		makeCall(req.slot('DEVICE'));
 		res.say('Calling device number '+req.slot('DEVICE'));
 	}
 );
+
+app.intent('WorkIntent', {
+		"slots":{"DEVICE":"AMAZON.DeviceType"}
+		,"utterances":["work {DEVICE}"]
+	},function(req,res) {
+		// for now just call a number
+		makeCall(req.slot('DEVICE'));
+		res.say('Calling work '+req.slot('DEVICE'));
+	}
+);
+
 module.exports = app;
