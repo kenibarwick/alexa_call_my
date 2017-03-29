@@ -1,28 +1,31 @@
 {
-  "name": "call_my",
-  "version": "1.0.1",
-  "description": "Call my phone skill",
+  "name": "my_phone",
+  "version": "1.0.0",
+  "description": "My Phone skill",
   "main": "index.js",
   "author": "Keni Barwick <keni@themobileguy.net> (http://themobileguy.net/)",
   "license": "ISC",
   "alexa": {
-    "applicationId": ""
+    "applicationId": "amzn1.echo-sdk-ams.app.ee82e1d0-eead-4376-aae6-b8ea15a824d5 "
   },
   "dependencies": {
-    "alexa-app": "^2.1.0",
+    "alexa-app": "^4.0.0",
 	"nexmo": "^1.1.0",
 	"dotenv": "^4.0.0",
-	"node-uuid": "^1.4.7"
+	"node-uuid": "^1.4.7",
+	"request": "^2.81.0",
+	"promise": "^7.1.1",
+	"request-promise": "^4.0.0"
   },
   "scripts": {
-    "test": "call my"
+    "test": "my_phone"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kenibarwick/alexa_call_my.git"
+    "url": "git+https://github.com/kenibarwick/my_phone.git"
   },
   "bugs": {
-    "url": "https://github.com/kenibarwick/alexa_call_my/issues"
+    "url": "https://github.com/kenibarwick/my_phone/issues"
   },
-  "homepage": "https://github.com/kenibarwick/alexa_call_my#readme"
+  "homepage": "https://github.com/kenibarwick/my_phone#readme"
 }

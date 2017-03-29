@@ -1,5 +1,5 @@
 var alexa = require('alexa-app');
-var app = new alexa.app('call_my');
+var app = new alexa.app('my_phone');
 
 var Nexmo = require('nexmo');
 require('dotenv').config({path: __dirname + '/.env'});
@@ -65,7 +65,8 @@ function makeCall(number) {
 				deviceNumber = '447711388882';
 				break;				
 			default:
-				deviceNumber = '447795666588';
+				deviceNumber = '447795666588'; 
+				number=0;
 		}
 		console.log('Calling device: #' + number + ' which is ' + deviceNumber);
 		
@@ -76,9 +77,9 @@ function makeCall(number) {
 			  }],
 			  from: {
 				type: 'phone',
-				number: '12345678901'
+				number: '447520635364'
 			  },
-			  answer_url: ['https://raw.githubusercontent.com/kenibarwick/alexa_call_my/master/response.json']
+			  answer_url: ['https://raw.githubusercontent.com/kenibarwick/my_phone/master/response.json']
 			}, (err, nexmoResult) => {
 			  if(err) { console.error(err); }
 			  else { 
