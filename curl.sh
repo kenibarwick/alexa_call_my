@@ -1,0 +1,1 @@
+curl -X POST -d @LaunchIntentRequest.json http://localhost:8080/alexa/my_phone -H "Content-type:application/json"

@@ -66,7 +66,7 @@ function makeCall(number) {
 				break;				
 			default:
 				deviceNumber = '447795666588'; 
-				number=0;
+				number='0';
 		}
 		console.log('Calling device: #' + number + ' which is ' + deviceNumber);
 		
@@ -108,16 +108,6 @@ app.intent('DeviceIntent', {
 		// for now just call a number
 		makeCall(req.slot('DEVICE'));
 		res.say('Calling device number '+req.slot('DEVICE'));
-	}
-);
-
-app.intent('WorkIntent', {
-		"slots":{"DEVICE":"AMAZON.DeviceType"}
-		,"utterances":["work {DEVICE}"]
-	},function(req,res) {
-		// for now just call a number
-		makeCall(req.slot('DEVICE'));
-		res.say('Calling work '+req.slot('DEVICE'));
 	}
 );
 

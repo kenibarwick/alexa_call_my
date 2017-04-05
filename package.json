@@ -6,7 +6,7 @@
   "author": "Keni Barwick <keni@themobileguy.net> (http://themobileguy.net/)",
   "license": "ISC",
   "alexa": {
-    "applicationId": "amzn1.echo-sdk-ams.app.ee82e1d0-eead-4376-aae6-b8ea15a824d5 "
+    "applicationId": "amzn1.ask.skill.3a01bef7-146f-4100-a987-bdf3fbcf927c"
   },
   "dependencies": {
     "alexa-app": "^4.0.0",
